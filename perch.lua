@@ -134,10 +134,11 @@ function SlashCmdList.PERCH(msg, editbox)
     if (canQueryAll) then
         RegisterUpdate()
         QueryAuctionItems("",nil,nil,0,0,0,0,0,0,true)
-    else
-        print("Perch: You cannot fully perch your AH more than once every 15 mins.")
+    elseif (canQuery) then
         print("Perch: Scanning current AH list (i.e. what you see in the Browse tab)")
         Scan()
+    else
+        print("Perch: You cannot fully perch your AH more than once every 15 mins, you cannot perch anything more than 3 times a second.")
     end
 end
 
