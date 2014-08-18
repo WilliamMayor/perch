@@ -1,7 +1,7 @@
 SLASH_PERCH1 = '/perch'
 DIALOG_PERCH = 'perch_dialog'
 
-local FormatMoney, GetBidPrice, ShouldBuy, ShouldBid, Buy, Bid, Scan, RegisterUpdate
+local FormatMoney, GetBidPrice, ShouldBuy, ShouldBid, Buy, Bid, Purchase, Scan, RegisterUpdate, Test
 
 function FormatMoney(money)
     local ret = ""
@@ -93,9 +93,14 @@ function Scan()
         print("Perch: Error: You must have the AH window open to perch.")
         return
     end
+    print("Perch: Found " .. batch .. " items")
     purchases = {}
     for index = batch, 1, -1 do
-        local name, _, count, quality, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, _, saleStatus, itemId, _ = GetAuctionItemInfo("list", index);
+        if index % 10000 == 0 then
+            print("Perch: At item " .. batch - index)
+            PlaySound("MapPing", "master");
+        end
+        local name, _, count, _, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, _, _, _, saleStatus, itemId, hasAllInfo = GetAuctionItemInfo("list", index);
         local item_link = GetAuctionItemLink("list", index)
         if item_link ~= nil then
             local _, _, _, _, _, _, _, _, _, _, vendorValue = GetItemInfo(itemId)
@@ -110,6 +115,7 @@ function Scan()
             end
         end
     end
+    PlaySound("QUESTCOMPLETED", "master");
     Purchase(purchases)
 end
 
@@ -130,7 +136,7 @@ function SlashCmdList.PERCH(msg, editbox)
         Test()
         return
     end
-    canQuery, canQueryAll = CanSendAuctionQuery();
+    local canQuery, canQueryAll = CanSendAuctionQuery();
     if (canQueryAll) then
         RegisterUpdate()
         QueryAuctionItems("",nil,nil,0,0,0,0,0,0,true)
