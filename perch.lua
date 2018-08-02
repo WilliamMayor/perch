@@ -97,8 +97,8 @@ function Scan()
     purchases = {}
     for index = batch, 1, -1 do
         if index % 10000 == 0 then
-            print("Perch: At item " .. batch - index)
-            PlaySound("MapPing", "master");
+            print("Perch: At item " .. (batch - index))
+            PlaySound(SOUNDKIT.MAP_PING, "Master");
         end
         local name, _, count, _, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, _, _, _, saleStatus, itemId, hasAllInfo = GetAuctionItemInfo("list", index);
         local item_link = GetAuctionItemLink("list", index)
@@ -115,7 +115,7 @@ function Scan()
             end
         end
     end
-    PlaySound("QUESTCOMPLETED", "master");
+    PlaySound(SOUNDKIT.IG_QUEST_LIST_COMPLETE, "Master");
     Purchase(purchases)
 end
 
@@ -136,10 +136,10 @@ function SlashCmdList.PERCH(msg, editbox)
         Test()
         return
     end
-    local canQuery, canQueryAll = CanSendAuctionQuery();
+    local canQuery, canQueryAll = CanSendAuctionQuery()
     if (canQueryAll) then
         RegisterUpdate()
-        QueryAuctionItems("",nil,nil,0,0,0,0,0,0,true)
+        QueryAuctionItems("",nil,nil,0,0,0,0,0,0,true,false)
     elseif (canQuery) then
         print("Perch: Scanning current AH list (i.e. what you see in the Browse tab)")
         Scan()
